@@ -1,14 +1,12 @@
 // =-=-=-=-=-=-=-
 // irods includes
 
-#define MAKE_IRODS_ERROR_MAP 1
-//#include "rodsErrorTable.h"
+#define MAKE_IRODS_ERROR_MAP
+#include "rodsErrorTable.h"
 #include "irods_error.hpp"
 #include "irods_ms_plugin.hpp"
-
 #include "icatHighLevelRoutines.hpp"
 #include "rcMisc.h"
-
 #include "irods_re_structs.hpp"
 
 // =-=-=-=-=-=-=-
