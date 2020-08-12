@@ -28,8 +28,8 @@
 
 
 int msierror_map(
-    msParam_t*      first,
-    msParam_t*      second,
+    msParam_t*      errorSymbol,
+    msParam_t*      errorNumber,
     ruleExecInfo_t* rei 
     )
 {
@@ -39,15 +39,15 @@ int msierror_map(
     int x = std::numeric_limits<int>::min();
 
     const char *s, *t;
-    if ( ( s = parseMspForStr(first ) ) == NULL) {
-        rodsLog( LOG_ERROR,"null first param '%s'",first);
+    if ( ( s = parseMspForStr(errorSymbol ) ) == NULL) {
+        rodsLog( LOG_ERROR,"null errorSymbol param '%s'",errorSymbol);
         return USER__NULL_INPUT_ERR;
     }
-    if ( ( t = parseMspForStr(second ) ) == NULL) {
-        rodsLog( LOG_ERROR,"null second param '%s'",second);
+    if ( ( t = parseMspForStr(errorNumber ) ) == NULL) {
+        rodsLog( LOG_ERROR,"null errorNumber param '%s'",errorNumber);
         return USER__NULL_INPUT_ERR;
     }
-    if (std::strlen(s)) {  //--> nonzero length first param, store str(errnum(first)) into second
+    if (std::strlen(s)) {  //--> nonzero length errorSymbol param, store str(errnum(errorSymbol)) into errorNumber
         try {
             x = name_map.at(s) ;
         }
@@ -56,24 +56,24 @@ int msierror_map(
             //
         }
         auto s = std::to_string( x );
-        fillStrInMsParam( second, s.c_str());
+        fillStrInMsParam( errorNumber, s.c_str());
     }
     else {
-        std::string first_list, second_list ;
+        std::string errorSymbol_list, errorNumber_list ;
         const char *z=nullptr, sep[] = "\n";
         for (auto i = error_map.rbegin();  i != error_map.rend(); i++) {
            auto f1 = i->first;
            auto f1s = std::to_string(f1);
            auto f2 = i->second.c_str();
            if (0==std::strlen(t) || 0==std::strcmp(f1s.c_str(),t)) {
-             if (z) { first_list += z; second_list += z; }
+             if (z) { errorSymbol_list += z; errorNumber_list += z; }
              z = sep;
-             first_list += f2;
-             second_list += f1s;
+             errorSymbol_list += f2;
+             errorNumber_list += f1s;
            }
         }
-        fillStrInMsParam(first, first_list.c_str());
-        fillStrInMsParam(second, second_list.c_str());
+        fillStrInMsParam(errorSymbol, errorSymbol_list.c_str());
+        fillStrInMsParam(errorNumber, errorNumber_list.c_str());
     }
 
     rei->status = 0;
